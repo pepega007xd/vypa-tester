@@ -14,7 +14,7 @@ python3 tester.py [--compiler PATH] [--extensions EXT1,EXT2,...] [--timeout SECO
 
 | Option | Meaning | Default |
 |---|---|---|
-| `--compiler PATH` | Compiler executable, invoked as `COMPILER input.vyp output.vc` | `./vypint` |
+| `--compiler PATH` | Compiler executable, invoked as `COMPILER input.vyp output.vc` | `./vypcomp` |
 | `--extensions A,B` | Extensions implemented by the compiler (case-insensitive), used for skipping tests | *(empty)* |
 | `--timeout SECONDS` | Timeout for the compiler, the interpreter and the startup check | `10` |
 | `--show-all` | Also print passed and skipped tests (default: only failed tests are printed) | off |

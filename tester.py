@@ -19,7 +19,7 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 TESTS_DIR = "tests"
 BUILD_DIR = "build"
-DEFAULT_COMPILER = "./vypint"
+DEFAULT_COMPILER = "./vypcomp"
 DEFAULT_JAR = "vypint-1.0.jar"
 DEFAULT_TIMEOUT = 10.0
 
@@ -74,8 +74,11 @@ class Palette:
     def cyan(self, text):
         return self._wrap("1;36", text)
 
-    def dim(self, text):
+    def grey(self, text):
         return self._wrap("90", text)
+
+    def dim(self, text):
+        return self.grey(text)
 
     def bold(self, text):
         return self._wrap("1", text)
@@ -128,6 +131,20 @@ def rc_meaning(code, table):
     if code == 0:
         return "success"
     return table.get(code, "unknown code")
+
+
+def rc_mismatch(kind, expected, actual, table):
+    """Return-code mismatch message; the expected value is shown in bold green,
+    the actual value in bold red (when colors are enabled)."""
+    return "expected {} return code {}, got {}".format(
+        kind,
+        P.green("{} ({})".format(expected, rc_meaning(expected, table))),
+        P.red("{} ({})".format(actual, rc_meaning(actual, table))))
+
+
+def grey_block(text):
+    """Render captured process output in light grey, line by line."""
+    return "\n".join(P.grey(line) for line in text.splitlines())
 
 
 def run_command(cmd, timeout, input_bytes=None):
@@ -346,17 +363,16 @@ def run_test(test, ctx):
         lines = ["compiler timed out after " + fmt_seconds(ctx.timeout)]
         captured = tail_text(err.stdout) or tail_text(err.stderr)
         if captured:
-            lines.append("compiler output:\n" + captured)
+            lines.append("compiler output:\n" + grey_block(captured))
         return FAIL, lines
     if err is not None:
         return FAIL, ["failed to run the compiler: {}".format(err)]
     if proc.returncode != test.compiler_rc:
-        lines = ["expected compiler return code {} ({}), got {} ({})".format(
-            test.compiler_rc, rc_meaning(test.compiler_rc, COMPILER_MEANINGS),
-            proc.returncode, rc_meaning(proc.returncode, COMPILER_MEANINGS))]
+        lines = [rc_mismatch("compiler", test.compiler_rc, proc.returncode,
+                             COMPILER_MEANINGS)]
         captured = tail_text(proc.stderr) or tail_text(proc.stdout)
         if captured:
-            lines.append("compiler output:\n" + captured)
+            lines.append("compiler output:\n" + grey_block(captured))
         return FAIL, lines
     if test.compiler_rc != 0:
         return PASS, []  # expected compiler error matched; there is nothing to interpret
@@ -372,7 +388,7 @@ def run_test(test, ctx):
         lines = ["interpreter timed out after " + fmt_seconds(ctx.timeout)]
         captured = tail_text(err.stdout) or tail_text(err.stderr)
         if captured:
-            lines.append("interpreter output:\n" + captured)
+            lines.append("interpreter output:\n" + grey_block(captured))
         return FAIL, lines
     if err is not None:
         return FAIL, ["failed to run the interpreter: {}".format(err)]
@@ -382,12 +398,11 @@ def run_test(test, ctx):
 
     lines = []
     if proc.returncode != test.interpreter_rc:
-        lines.append("expected interpreter return code {} ({}), got {} ({})".format(
-            test.interpreter_rc, rc_meaning(test.interpreter_rc, INTERPRETER_MEANINGS),
-            proc.returncode, rc_meaning(proc.returncode, INTERPRETER_MEANINGS)))
+        lines.append(rc_mismatch("interpreter", test.interpreter_rc, proc.returncode,
+                                 INTERPRETER_MEANINGS))
         captured = tail_text(proc.stderr)
         if captured:
-            lines.append("interpreter output:\n" + captured)
+            lines.append("interpreter output:\n" + grey_block(captured))
     if proc.stdout != expected_stdout:
         lines.append("stdout differs (expected {} bytes, got {} bytes)\n{}".format(
             len(expected_stdout), len(proc.stdout),
@@ -438,7 +453,7 @@ def use_color(args):
 def parse_args(argv):
     parser = argparse.ArgumentParser(
         description="Test runner for the VYP compiler and the vypint interpreter.",
-        epilog="example: python3 tester.py --compiler ./vypint --extensions STRING,FLOAT --timeout 5",
+        epilog="example: python3 tester.py --compiler ./vypcomp --extensions STRING,FLOAT --timeout 5",
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--compiler", default=DEFAULT_COMPILER, metavar="PATH",
                         help="compiler executable, called as 'COMPILER input.vyp output.vc' "

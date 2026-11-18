@@ -5,7 +5,11 @@ the VYP compiler and the `vypint` interpreter. Run it from the project root —
 it expects the `tests/` directory here and the interpreter jar next to the
 tester.
 
-If you have tests to contribute, i will gladly accept PRs.
+If you have tests to contribute, i will gladly accept PRs. I have included a 
+markdown version of the assignment in [assignment.md](./assignment.md), which
+might be useful if you want to generate some tests using a clanker.
+
+Also, note that this tester was completely ✨vibecoded✨.
 
 ## Usage
 

@@ -5,11 +5,13 @@ the VYP compiler and the `vypint` interpreter. Run it from the project root —
 it expects the `tests/` directory here and the interpreter jar next to the
 tester.
 
+If you have tests to contribute, i will gladly accept PRs.
+
 ## Usage
 
 ```
 python3 tester.py [--compiler PATH] [--extensions EXT1,EXT2,...] [--timeout SECONDS]
-                  [--show-all] [--interpreter JAR] [--no-color]
+                  [--filter PATH[,PATH...]] [--show-all] [--interpreter JAR] [--no-color]
 ```
 
 | Option | Meaning | Default |
@@ -17,6 +19,7 @@ python3 tester.py [--compiler PATH] [--extensions EXT1,EXT2,...] [--timeout SECO
 | `--compiler PATH` | Compiler executable, invoked as `COMPILER input.vyp output.vc` | `./vypcomp` |
 | `--extensions A,B` | Extensions implemented by the compiler (case-insensitive), used for skipping tests | *(empty)* |
 | `--timeout SECONDS` | Timeout for the compiler, the interpreter and the startup check | `10` |
+| `--filter A,B` | Run only tests matching the given path(s); see *Filtering* below | *(empty)* |
 | `--show-all` | Also print passed and skipped tests (default: only failed tests are printed) | off |
 | `--interpreter JAR` | Interpreter jar, run as `java -jar JAR program.vc` | `vypint-1.0.jar` next to `tester.py` |
 | `--no-color` | Disable colored output (colors are also off without a terminal or when `NO_COLOR` is set) | off |
@@ -42,6 +45,28 @@ with a summary of the total passed / skipped / failed counts. Failed tests are
 always printed with the reason (e.g. `expected compiler return code 13
 (semantic error (type incompatibility)), got 0 (success)`, or `stdout differs`
 followed by a unified diff).
+
+## Filtering
+
+`--filter` accepts a comma-separated list of patterns; a test runs when it
+matches **any** of them. Each pattern gets an implicit trailing `*` (glob
+style, `*` also crosses `/`):
+
+- `--filter tests/semantic/function` runs everything under
+  `tests/semantic/function*` — the whole `tests/semantic/function/` directory
+  *and* tests like `tests/semantic/function_args.vyp`.
+- A single test can be selected exactly: `--filter tests/ok.vyp`.
+- Patterns may also be given relative to `tests/`, e.g.
+  `--filter semantic/function`.
+
+A slash-less pattern that does not refer to an existing directory or test file
+(neither in the working directory nor under `tests/`) is instead treated as a
+name search: `--filter function_return` runs every suite and every test whose
+name contains `function_return`.
+
+A pattern that matches no test produces a warning; if no pattern matches
+anything, the tester exits with status 2. When a filter excludes tests, the
+summary is followed by a `filtered out: N test(s)` line.
 
 ## Writing tests
 

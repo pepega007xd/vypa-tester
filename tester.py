@@ -9,6 +9,7 @@ Uses only the Python standard library.
 
 import argparse
 import difflib
+import fnmatch
 import os
 import re
 import shutil
@@ -187,6 +188,18 @@ class Test:
     def full_name(self):
         return self.name if self.suite is None else "{}/{}".format(self.suite, self.name)
 
+    @property
+    def rel_path(self):
+        """POSIX-style path of the test file relative to the tests directory."""
+        if self.suite is None:
+            return self.name + ".vyp"
+        return "{}/{}.vyp".format(self.suite, self.name)
+
+    @property
+    def full_rel_path(self):
+        """POSIX-style path of the test file relative to the working directory."""
+        return TESTS_DIR + "/" + self.rel_path
+
 
 TEST_INFO_RE = re.compile(r"^//\s*TEST-INFO\s+(\S+)(?:\s+(.*\S))?\s*$")
 
@@ -260,6 +273,67 @@ def discover_tests(tests_dir):
     return [(None, standalone)] + [(suite, suites[suite]) for suite in sorted(suites)]
 
 
+# ------------------------------------------------------------------ filtering
+
+
+def split_filters(value):
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def filter_mode(pattern):
+    """Decide how a filter pattern matches.
+
+    Patterns containing '/' are always matched as (glob-style) paths. A
+    slash-less pattern is matched as a path too when it refers to an existing
+    directory or test file (in the working directory or under tests/);
+    otherwise it matches as a plain substring of suite and test names.
+    """
+    if "/" in pattern:
+        return "path"
+    for candidate in (pattern, pattern + ".vyp",
+                      os.path.join(TESTS_DIR, pattern),
+                      os.path.join(TESTS_DIR, pattern + ".vyp")):
+        if os.path.exists(candidate):
+            return "path"
+    return "substring"
+
+
+def pattern_matches(pattern, mode, test):
+    """Every path pattern gets an implicit trailing '*', so '--filter
+    tests/semantic/function' also matches 'tests/semantic/function_args.vyp'."""
+    if mode == "substring":
+        return pattern in test.rel_path
+    starred = pattern + "*"
+    return (fnmatch.fnmatchcase(test.rel_path, starred) or
+            fnmatch.fnmatchcase(test.full_rel_path, starred))
+
+
+def apply_filter(groups, patterns):
+    """Keep only tests matching any of the filter patterns.
+
+    Returns (filtered groups, number of excluded tests, patterns that matched
+    no test at all).
+    """
+    modes = [(pattern, filter_mode(pattern)) for pattern in patterns]
+    matched = {pattern: False for pattern, _ in modes}
+    kept_groups = []
+    kept_count = 0
+    for suite, tests in groups:
+        kept_tests = []
+        for test in tests:
+            for pattern, mode in modes:
+                if pattern_matches(pattern, mode, test):
+                    matched[pattern] = True
+                    kept_tests.append(test)
+                    break
+        if kept_tests:
+            kept_groups.append((suite, kept_tests))
+            kept_count += len(kept_tests)
+    total = sum(len(tests) for _, tests in groups)
+    unmatched = [pattern for pattern, hit in matched.items() if not hit]
+    return kept_groups, total - kept_count, unmatched
+
+
 # -------------------------------------------------------------------- output
 
 _CONTROL_RE = re.compile(r"[\x00-\x08\x0b-\x1f\x7f]")
@@ -291,6 +365,8 @@ def print_config(ctx):
     print(P.bold("extensions:") + " " +
           (", ".join(sorted(ctx.extensions)) if ctx.extensions else "(none)"))
     print(P.bold("timeout:") + " " + fmt_seconds(ctx.timeout))
+    if ctx.filters:
+        print(P.bold("filter:") + " " + ", ".join(ctx.filters))
 
 
 def print_results(groups, results, show_all):
@@ -317,12 +393,14 @@ def print_results(groups, results, show_all):
         print()
 
 
-def print_summary(counts, total):
+def print_summary(counts, total, filtered_out=0):
     print(P.bold("Summary: {}, {}, {} ({} total)".format(
         P.green("{} passed".format(counts[PASS])),
         P.yellow("{} skipped".format(counts[SKIP])),
         P.red("{} failed".format(counts[FAIL])),
         total)))
+    if filtered_out:
+        print(P.dim("filtered out: {} test(s) by --filter".format(filtered_out)))
 
 
 # ------------------------------------------------------------------ testing
@@ -336,6 +414,7 @@ class Context:
                            for ext in args.extensions.split(",") if ext.strip()}
         self.timeout = args.timeout
         self.build_dir = BUILD_DIR
+        self.filters = split_filters(args.filter)
 
 
 def work_path(test, ctx, suffix):
@@ -469,6 +548,13 @@ def parse_args(argv):
     parser.add_argument("--show-all", action="store_true",
                         help="also print passed and skipped tests (by default only failed "
                              "tests are printed)")
+    parser.add_argument("--filter", default="", metavar="PATH[,PATH...]",
+                        help="comma-separated list of filters; each may name a directory or a "
+                             "single test and gets an implicit trailing '*', so "
+                             "'--filter tests/semantic/function' also matches "
+                             "'tests/semantic/function_args.vyp'. A slash-less filter that refers "
+                             "to no existing directory/test matches every suite and test whose "
+                             "name contains it (default: run all tests)")
     parser.add_argument("--no-color", action="store_true",
                         help="disable colored output")
     args = parser.parse_args(argv)
@@ -492,9 +578,17 @@ def main(argv=None):
     if not os.path.isdir(TESTS_DIR):
         die("tests directory not found: " + TESTS_DIR)
     groups = discover_tests(TESTS_DIR)
-    total = sum(len(tests) for _, tests in groups)
-    if total == 0:
+    if sum(len(tests) for _, tests in groups) == 0:
         die("no .vyp tests found in " + TESTS_DIR)
+
+    filtered_out = 0
+    if ctx.filters:
+        groups, filtered_out, unmatched = apply_filter(groups, ctx.filters)
+        for pattern in unmatched:
+            warn("filter {!r} did not match any tests".format(pattern))
+        if not groups:
+            die("no tests match the filter(s): " + ", ".join(ctx.filters))
+    total = sum(len(tests) for _, tests in groups)
 
     for _, tests in groups:
         for test in tests:
@@ -517,7 +611,7 @@ def main(argv=None):
             counts[status] += 1
 
     print_results(groups, results, args.show_all)
-    print_summary(counts, total)
+    print_summary(counts, total, filtered_out)
     return 1 if counts[FAIL] else 0
 
 

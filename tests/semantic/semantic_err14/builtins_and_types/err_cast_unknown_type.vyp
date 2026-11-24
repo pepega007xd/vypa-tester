@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+
+void main(void) {
+    Object o;
+    o = new Object;
+    o = (UnknownClass)o;
+}

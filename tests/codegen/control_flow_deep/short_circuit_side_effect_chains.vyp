@@ -1,0 +1,14 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+int step(string name, int ret) {
+    print(name);
+    return ret;
+}
+
+void main(void) {
+    int r;
+    // Evaluates A(1), B(0) -> left side of || is 0 -> evaluates C(1), D(1) -> short-circuits before E
+    r = (step("A", 1) && step("B", 0)) || (step("C", 1) && step("D", 1)) || step("E", 1);
+    print(":", (string)r, "\n");
+}

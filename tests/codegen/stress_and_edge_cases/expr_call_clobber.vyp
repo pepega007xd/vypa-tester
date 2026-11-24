@@ -1,0 +1,19 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+int trace(int x) {
+    int localA;
+    int localB;
+    localA = x * 10;
+    localB = localA + x;
+    print("[", (string)x, "]");
+    return localB - localA; // returns x
+}
+
+void main(void) {
+    int res;
+    // Left-to-right evaluation order + preserving intermediate operands across calls
+    res = trace(1) + trace(2) * trace(3) - trace(10) / trace(2);
+    // 1 + (2 * 3) - (10 / 2) = 1 + 6 - 5 = 2
+    print(" => ", (string)res, "\n");
+}

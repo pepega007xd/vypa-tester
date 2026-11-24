@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 13
+
+void takeString(string s) {}
+
+void main(void) {
+    takeString(999);
+}

@@ -1,0 +1,24 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+int findTarget(int target) {
+    int i;
+    int j;
+    for (i = 1; i <= 5; i = i + 1) {
+        string shadowOuter;
+        shadowOuter = "outer";
+        for (j = 1; j <= 5; j = j + 1) {
+            int prod;
+            prod = i * j;
+            if (prod == target) {
+                return i * 100 + j;
+            }
+        }
+    }
+    return 1;
+}
+
+void main(void) {
+    print((string)findTarget(12), "|", (string)findTarget(99), "\n");
+}

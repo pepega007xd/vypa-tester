@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 14
+
+void accept(UnknownType u) {}
+
+void main(void) {}

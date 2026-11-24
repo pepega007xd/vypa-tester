@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 28
+
+void main(void) {
+    Object o;
+    print(o.toString(), "\n");
+}

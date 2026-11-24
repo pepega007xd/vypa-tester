@@ -1,0 +1,58 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Animal : Object {
+    string name;
+
+    string speak(void) {
+        return "...";
+    }
+}
+
+class Dog : Animal {
+    int barkVolume;
+    string breed;
+
+    void setupDog(string n, string b, int v) {
+        this.name = n;
+        this.breed = b;
+        this.barkVolume = v;
+    }
+
+    string speak(void) {
+        return this.name + "(" + this.breed + "):" + (string)this.barkVolume;
+    }
+}
+
+class Cat : Animal {
+    string color;
+    int lives;
+
+    void setupCat(string n, int l, string c) {
+        this.name = n;
+        this.lives = l;
+        this.color = c;
+    }
+
+    string speak(void) {
+        return this.name + "[" + this.color + "]:" + (string)this.lives;
+    }
+}
+
+void main(void) {
+    Animal a1;
+    Animal a2;
+    Dog d;
+    Cat c;
+
+    d = new Dog;
+    d.setupDog("Rex", "Husky", 9);
+
+    c = new Cat;
+    c.setupCat("Misty", 9, "Gray");
+
+    a1 = d;
+    a2 = c;
+
+    print(a1.speak(), "|", a2.speak(), "\n");
+}

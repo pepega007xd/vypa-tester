@@ -1,0 +1,16 @@
+// TEST-INFO compiler-return-code 14
+
+class GrandParent : Object {
+    int compute(int x) { return x; }
+}
+
+class Parent : GrandParent {
+    int y;
+}
+
+class GrandChild : Parent {
+    // Must still match GrandParent.compute signature!
+    int compute(string x) { return 0; }
+}
+
+void main(void) {}

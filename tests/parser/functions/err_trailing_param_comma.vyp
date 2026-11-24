@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 12
+
+void helper(int a, string b,) {}
+
+void main(void) {}

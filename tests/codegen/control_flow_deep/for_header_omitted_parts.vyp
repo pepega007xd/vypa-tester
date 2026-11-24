@@ -1,0 +1,31 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+void main(void) {
+    int i;
+    int sum;
+    sum = 0;
+
+    // 1. Omitted init
+    i = 1;
+    for (; i <= 3; i = i + 1) {
+        sum = sum + i; // +6 -> 6
+    }
+
+    // 2. Omitted update
+    for (i = 0; i < 3; ) {
+        sum = sum + 10; // +30 -> 36
+        i = i + 1;
+    }
+
+    // 3. Omitted condition (infinite until break)
+    for (i = 0; ; i = i + 1) {
+        if (i == 4) {
+            break;
+        }
+        sum = sum + 1; // +4 -> 40
+    }
+
+    print((string)sum, "\n");
+}

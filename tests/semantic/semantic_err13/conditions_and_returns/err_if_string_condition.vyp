@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+// TEST-INFO required-extensions IFONLY
+
+void main(void) {
+    if ("invalid") {
+        print("bad\n");
+    }
+}

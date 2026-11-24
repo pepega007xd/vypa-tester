@@ -1,0 +1,10 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 27
+
+void main(void) {
+    int a;
+    int b;
+    a = 10;
+    b = 0;
+    print((string)(a / b), "\n");
+}

@@ -1,0 +1,13 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 28
+
+class Animal : Object {}
+class Dog : Animal {}
+class Cat : Animal {}
+
+void main(void) {
+    Animal a;
+    Cat c;
+    a = new Dog;
+    c = (Cat)a;
+}

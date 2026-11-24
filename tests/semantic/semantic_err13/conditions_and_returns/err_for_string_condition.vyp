@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 13
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    int i;
+    for (i = 0; "cond"; i = i + 1) {
+        break;
+    }
+}

@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 12
+
+int foo(void) {
+    return 1, 2;
+}
+
+void main(void) {}

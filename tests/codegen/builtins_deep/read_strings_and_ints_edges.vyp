@@ -1,0 +1,18 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void main(void) {
+    int a;
+    int b;
+    string line1;
+    string emptyLine;
+    string line3;
+
+    a = readInt();
+    b = readInt();
+    line1 = readString();
+    emptyLine = readString();
+    line3 = readString();
+
+    print((string)(a + b), "|[", line1, "]|[", emptyLine, "]|[", line3, "]\n");
+}

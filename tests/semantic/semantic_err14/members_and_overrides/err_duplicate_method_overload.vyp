@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 14
+
+class Math : Object {
+    int add(int a) { return a; }
+    int add(int a, int b) { return a + b; }
+}
+
+void main(void) {}

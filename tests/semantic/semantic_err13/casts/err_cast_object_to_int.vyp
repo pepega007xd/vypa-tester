@@ -1,0 +1,10 @@
+// TEST-INFO compiler-return-code 13
+
+class A : Object {}
+
+void main(void) {
+    A a;
+    int x;
+    a = new A;
+    x = (int)a;
+}

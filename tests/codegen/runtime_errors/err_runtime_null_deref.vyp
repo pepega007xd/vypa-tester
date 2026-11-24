@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 28
+
+class Node : Object {
+    int x;
+}
+
+void main(void) {
+    Node n;
+    print((string)n.x, "\n");
+}

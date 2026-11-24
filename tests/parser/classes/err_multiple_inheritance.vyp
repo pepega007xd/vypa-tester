@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 12
+
+class A : Object {}
+class B : Object {}
+
+class C : A, B {}
+
+void main(void) {}

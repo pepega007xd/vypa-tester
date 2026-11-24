@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 11
+
+void main(void) {
+    int x;
+    x = 10 % 3;
+}

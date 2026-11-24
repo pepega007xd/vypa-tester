@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+
+class Box : Object {
+    int size;
+
+    int size(void) {
+        return 1;
+    }
+}
+
+void main(void) {}

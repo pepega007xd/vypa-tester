@@ -1,0 +1,3 @@
+// TEST-INFO compiler-return-code 12
+
+void main() {}

@@ -1,0 +1,18 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+class Base : Object {}
+class Sub : Base {
+    int x;
+}
+
+void main(void) {
+    Base b;
+    Sub s;
+    // Casting a null Base reference to Sub must succeed and remain null
+    s = (Sub)b;
+    if (!s) {
+        print("NULL_DOWNCAST_OK\n");
+    }
+}

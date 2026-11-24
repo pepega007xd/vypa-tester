@@ -1,0 +1,12 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void main(void) {
+    string s1;
+    string s2;
+    string combined;
+    s1 = "VYP";
+    s2 = "";
+    combined = s1 + s2 + "-" + (string)2026 + ":" + (string)0 + ":" + (string)(42);
+    print(combined, "\n");
+}

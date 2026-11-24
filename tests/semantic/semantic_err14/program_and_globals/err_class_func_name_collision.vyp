@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+
+class Widget : Object {}
+
+void Widget(void) {}
+
+void main(void) {}

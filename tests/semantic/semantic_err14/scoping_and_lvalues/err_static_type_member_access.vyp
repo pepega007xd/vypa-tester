@@ -1,0 +1,16 @@
+// TEST-INFO compiler-return-code 14
+
+class Base : Object {
+    void baseMethod(void) {}
+}
+
+class Sub : Base {
+    int subField;
+    void subMethod(void) {}
+}
+
+void main(void) {
+    Base b;
+    b = new Sub;
+    b.subMethod();
+}

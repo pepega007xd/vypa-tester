@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 12
+
+print("Statements cannot appear at global scope\n");
+
+void main(void) {}

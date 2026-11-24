@@ -1,0 +1,59 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Circle : Object {
+    int r;
+    Circle init(int radius) { this.r = radius; return this; }
+}
+
+class Rect : Object {
+    int w;
+    int h;
+    Rect init(int width, int height) { this.w = width; this.h = height; return this; }
+}
+
+class Visitor : Object {
+    int visitCircle(Circle c) { return 0; }
+    int visitRect(Rect r) { return 0; }
+}
+
+class Element : Object {
+    int accept(Visitor v) { return 0; }
+}
+
+class CircleElem : Element {
+    Circle data;
+    CircleElem init(int r) { this.data = (new Circle).init(r); return this; }
+    int accept(Visitor v) { return v.visitCircle(this.data); }
+}
+
+class RectElem : Element {
+    Rect data;
+    RectElem init(int w, int h) { this.data = (new Rect).init(w, h); return this; }
+    int accept(Visitor v) { return v.visitRect(this.data); }
+}
+
+class ApproxAreaVisitor : Visitor {
+    int visitCircle(Circle c) { return 3 * c.r * c.r; }
+    int visitRect(Rect r) { return r.w * r.h; }
+}
+
+class PerimeterVisitor : Visitor {
+    int visitCircle(Circle c) { return 6 * c.r; }
+    int visitRect(Rect r) { return 2 * (r.w + r.h); }
+}
+
+void main(void) {
+    Element e1;
+    Element e2;
+    Visitor areaV;
+    Visitor perimV;
+
+    e1 = (new CircleElem).init(5);
+    e2 = (new RectElem).init(4, 7);
+    areaV = new ApproxAreaVisitor;
+    perimV = new PerimeterVisitor;
+
+    print("AREA:", (string)(e1.accept(areaV) + e2.accept(areaV)), "\n");
+    print("PERIM:", (string)(e1.accept(perimV) + e2.accept(perimV)), "\n");
+}

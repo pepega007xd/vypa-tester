@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void main(void) {
+    print("A", 1, "", 2, "\t\"\\", 0, "\n");
+}

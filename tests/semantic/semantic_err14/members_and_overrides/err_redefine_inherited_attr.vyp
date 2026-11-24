@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+
+class Base : Object {
+    int id;
+}
+
+class Derived : Base {
+    int id;
+}
+
+void main(void) {}

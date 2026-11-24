@@ -1,0 +1,65 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class DFAState : Object {
+    string name(void) { return "BASE"; }
+    int isAccepting(void) { return 0; }
+    DFAState next(string ch) { return this; }
+}
+
+class ErrorState : DFAState {
+    string name(void) { return "ERR"; }
+    DFAState next(string ch) { return this; }
+}
+
+class NumberState : DFAState {
+    string name(void) { return "NUM"; }
+    int isAccepting(void) { return 1; }
+    DFAState next(string ch) {
+        if (ch >= "0" && ch <= "9") { return this; }
+        return new ErrorState;
+    }
+}
+
+class IdentState : DFAState {
+    string name(void) { return "ID"; }
+    int isAccepting(void) { return 1; }
+    DFAState next(string ch) {
+        if ((ch >= "a" && ch <= "z") || (ch >= "0" && ch <= "9") || ch == "_") {
+            return this;
+        }
+        return new ErrorState;
+    }
+}
+
+class StartState : DFAState {
+    string name(void) { return "START"; }
+    DFAState next(string ch) {
+        if (ch >= "0" && ch <= "9") { return new NumberState; }
+        if ((ch >= "a" && ch <= "z") || ch == "_") { return new IdentState; }
+        return new ErrorState;
+    }
+}
+
+string classifyToken(string tok) {
+    DFAState st;
+    int i;
+    int len;
+    st = new StartState;
+    len = length(tok);
+    for (i = 0; i < len; i = i + 1) {
+        st = st.next(subStr(tok, i, 1));
+    }
+    if (st.isAccepting()) {
+        return st.name();
+    }
+    return "INVALID";
+}
+
+void main(void) {
+    print(classifyToken("var_12"), "|");
+    print(classifyToken("90210"), "|");
+    print(classifyToken("12abc"), "|");
+    print(classifyToken(""), "\n");
+}

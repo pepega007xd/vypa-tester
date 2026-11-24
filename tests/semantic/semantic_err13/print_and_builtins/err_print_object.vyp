@@ -1,0 +1,10 @@
+// TEST-INFO compiler-return-code 13
+
+class Thing : Object {}
+
+void main(void) {
+    Thing t;
+    t = new Thing;
+    // print() only accepts int and string, never object references
+    print(t);
+}

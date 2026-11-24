@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 14
+
+class A : B {}
+class B : A {}
+
+void main(void) {}

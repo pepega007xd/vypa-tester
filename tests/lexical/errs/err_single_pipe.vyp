@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 11
+
+void main(void) {
+    int a;
+    a = 1 | 2;
+}

@@ -1,0 +1,16 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void appendLocal(string param) {
+    param = param + "_modified";
+}
+
+void main(void) {
+    string orig;
+    string copy;
+    orig = "base";
+    copy = orig;
+    orig = orig + "_changed";
+    appendLocal(copy);
+    print(orig, "|", copy, "\n");
+}

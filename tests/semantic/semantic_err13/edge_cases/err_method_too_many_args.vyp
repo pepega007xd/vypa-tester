@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 13
+
+class Worker : Object {
+    void work(int a) {}
+}
+
+void main(void) {
+    Worker w;
+    w = new Worker;
+    w.work(1, 2);
+}

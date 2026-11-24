@@ -1,0 +1,80 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class VecNode : Object {
+    int idx;
+    int val;
+    VecNode next;
+    VecNode init(int i, int v, VecNode n) { this.idx = i; this.val = v; this.next = n; return this; }
+}
+
+int vecGet(VecNode v, int idx) {
+    while (v.idx != idx) { v = v.next; }
+    return v.val;
+}
+
+void vecSet(VecNode v, int idx, int val) {
+    while (v.idx != idx) { v = v.next; }
+    v.val = val;
+}
+
+VecNode makeVec(int size) {
+    VecNode head;
+    int i;
+    for (i = size - 1; i >= 0; i = i - 1) {
+        head = (new VecNode).init(i, 0, head);
+    }
+    return head;
+}
+
+int min3(int a, int b, int c) {
+    int m;
+    m = a;
+    if (b < m) { m = b; }
+    if (c < m) { m = c; }
+    return m;
+}
+
+int editDistance(string s1, string s2) {
+    int m;
+    int n;
+    int i;
+    int j;
+    VecNode prev;
+    VecNode curr;
+
+    m = length(s1);
+    n = length(s2);
+    prev = makeVec(n + 1);
+    curr = makeVec(n + 1);
+
+    for (j = 0; j <= n; j = j + 1) {
+        vecSet(prev, j, j);
+    }
+
+    for (i = 1; i <= m; i = i + 1) {
+        vecSet(curr, 0, i);
+        for (j = 1; j <= n; j = j + 1) {
+            int cost;
+            cost = 1;
+            if (subStr(s1, i - 1, 1) == subStr(s2, j - 1, 1)) {
+                cost = 0;
+            }
+            vecSet(curr, j, min3(
+                vecGet(prev, j) + 1,
+                vecGet(curr, j - 1) + 1,
+                vecGet(prev, j - 1) + cost
+            ));
+        }
+        for (j = 0; j <= n; j = j + 1) {
+            vecSet(prev, j, vecGet(curr, j));
+        }
+    }
+    return vecGet(prev, n);
+}
+
+void main(void) {
+    print((string)editDistance("kitten", "sitting"), "|");
+    print((string)editDistance("cesky", "cesko"), "\n");
+}

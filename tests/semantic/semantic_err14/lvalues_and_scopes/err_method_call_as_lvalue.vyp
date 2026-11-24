@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+
+class Box : Object {
+    int get(void) { return 1; }
+}
+
+void main(void) {
+    Box b;
+    b = new Box;
+    b.get() = 5;
+}

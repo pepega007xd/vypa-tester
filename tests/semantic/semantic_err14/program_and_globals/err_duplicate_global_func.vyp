@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+
+int compute(int a) {
+    return a;
+}
+
+int compute(string b) {
+    return 0;
+}
+
+void main(void) {}

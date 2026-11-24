@@ -1,0 +1,116 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+class Parser : Object {
+    string src;
+    int pos;
+    int len;
+
+    Parser init(string s) {
+        this.src = s;
+        this.pos = 0;
+        this.len = length(s);
+        return this;
+    }
+
+    void skipSpaces(void) {
+        while (this.pos < this.len) {
+            if (subStr(this.src, this.pos, 1) != " ") {
+                break;
+            }
+            this.pos = this.pos + 1;
+        }
+    }
+
+    string peek(void) {
+        this.skipSpaces();
+        if (this.pos >= this.len) { return ""; }
+        return subStr(this.src, this.pos, 1);
+    }
+
+    int parseExpr(void) {
+        int val;
+        val = this.parseTerm();
+        while (this.peek() == "+" || this.peek() == "-") {
+            string op;
+            op = this.peek();
+            this.pos = this.pos + 1;
+            if (op == "+") {
+                val = val + this.parseTerm();
+            } else {
+                val = val - this.parseTerm();
+            }
+        }
+        return val;
+    }
+
+    int parseTerm(void) {
+        int val;
+        val = this.parseFactor();
+        while (this.peek() == "*" || this.peek() == "/") {
+            string op;
+            op = this.peek();
+            this.pos = this.pos + 1;
+            if (op == "*") {
+                val = val * this.parseFactor();
+            } else {
+                val = val / this.parseFactor();
+            }
+        }
+        return val;
+    }
+
+    int parseFactor(void) {
+        string ch;
+        ch = this.peek();
+        if (ch == "-") {
+            this.pos = this.pos + 1;
+            return 0 - this.parseFactor();
+        }
+        if (ch == "(") {
+            int inner;
+            this.pos = this.pos + 1;
+            inner = this.parseExpr();
+            if (this.peek() == ")") {
+                this.pos = this.pos + 1;
+            }
+            return inner;
+        }
+        return this.parseNumber();
+    }
+
+    int parseNumber(void) {
+        int num;
+        this.skipSpaces();
+        num = 0;
+        while (this.pos < this.len) {
+            string d;
+            d = subStr(this.src, this.pos, 1);
+            if (d < "0" || d > "9") {
+                break;
+            }
+            int dv;
+            dv = 0;
+            if (d == "1") { dv = 1; }
+            if (d == "2") { dv = 2; }
+            if (d == "3") { dv = 3; }
+            if (d == "4") { dv = 4; }
+            if (d == "5") { dv = 5; }
+            if (d == "6") { dv = 6; }
+            if (d == "7") { dv = 7; }
+            if (d == "8") { dv = 8; }
+            if (d == "9") { dv = 9; }
+            num = num * 10 + dv;
+            this.pos = this.pos + 1;
+        }
+        return num;
+    }
+}
+
+void main(void) {
+    Parser p;
+    p = (new Parser).init("10 + 2 * (30 - (4 + 6) * 2) - -5");
+    // 10 + 2 * (30 - 20) + 5 = 35
+    print((string)p.parseExpr(), "\n");
+}

@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+
+class Base : Object {
+    void run(int a) {}
+}
+
+class Sub : Base {
+    void run(int a, int b) {}
+}
+
+void main(void) {}

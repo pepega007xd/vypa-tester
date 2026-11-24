@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 14
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    int i;
+    // 'inside' is declared inside the loop body block, so it is NOT in scope in the for update clause
+    for (i = 0; i < 5; inside = inside + 1) {
+        int inside;
+        inside = 1;
+    }
+}

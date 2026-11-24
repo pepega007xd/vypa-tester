@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+
+void foo(int x) {
+    int x;
+}
+
+void main(void) {}

@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 13
+
+class Parent : Object {}
+class Child : Parent {}
+
+void main(void) {
+    Parent p;
+    Child c;
+    p = new Child;
+    c = p;
+}

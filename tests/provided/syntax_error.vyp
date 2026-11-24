@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 12
+// example of syntax error - missing id/expression in brackets
+void main(void) {
+  int b;
+  b =  ( );
+}

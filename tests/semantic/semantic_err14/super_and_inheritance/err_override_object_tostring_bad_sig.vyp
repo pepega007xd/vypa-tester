@@ -1,0 +1,10 @@
+// TEST-INFO compiler-return-code 14
+
+class BadString : Object {
+    // Object.toString returns string; overriding with int is Error 14
+    int toString(void) {
+        return 42;
+    }
+}
+
+void main(void) {}

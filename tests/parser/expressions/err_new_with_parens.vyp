@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 12
+
+class MyClass : Object {}
+
+void main(void) {
+    MyClass m;
+    m = new MyClass();
+}

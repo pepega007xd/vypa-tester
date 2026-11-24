@@ -1,0 +1,12 @@
+// TEST-INFO compiler-return-code 14
+
+class Holder : Object {
+    int num;
+}
+
+void main(void) {
+    Holder h;
+    int x;
+    h = new Holder;
+    x = h.num.subField;
+}

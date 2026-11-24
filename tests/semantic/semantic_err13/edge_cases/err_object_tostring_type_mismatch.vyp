@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+
+void main(void) {
+    Object o;
+    int n;
+    o = new Object;
+    n = o.toString();
+}

@@ -1,0 +1,87 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+/* Multi-line comment test:
+   Contains keywords like class, void, int, string, while, return
+   and tricky symbols /* // " ' \ \x000041 inside comment. */
+
+class ClassyObject : Object {
+    int integerAttr;
+    string stringAttr;
+
+    void init(int voidParam, string returnVal) {
+        this.integerAttr = voidParam;
+        this.stringAttr = returnVal;
+    }
+
+    string describe(void) {
+        return super.getClass() + ":" + this.stringAttr + ":" + (string)this.integerAttr;
+    }
+}
+
+void main(void) {
+    // 1. Identifiers starting with keywords & underscores
+    int ifCount;
+    int elseCount;
+    int whileLoop;
+    int forIndex;
+    int new_val;
+    int _leadingUnderscore123;
+
+    // 2. Integer literals (zero, leading zeros, multi-digit, signed expressions)
+    int zero;
+    int leadingZeros;
+    int bigNum;
+    zero = 0;
+    leadingZeros = 42;
+    bigNum = 2147483647;
+    ifCount = 10 + 25 * 2 - 40 / 4; // -10 + 50 - 10 = 50
+
+    // 3. String literals: escapes (\n, \t, \\, \") and 6-hex-digit UTF escapes (\xHHHHHH)
+    string emptyStr;
+    string escapesStr;
+    string utfStr;
+    emptyStr = "";
+    escapesStr = "Line1\n\tTabbed\\Backslash\"QuoteSingle";
+    // \x000041 = 'A', \x00010D = 'č', \x01F600 = '😀'
+    utfStr = "ASCII:\x000041 Czech:\x00010D Emoji:\x01F600";
+
+    print(emptyStr, escapesStr, "\n", utfStr, "\n");
+    print((string)zero, "|", (string)leadingZeros, "|", (string)bigNum, "|", (string)ifCount, "\n");
+
+    // 4. All operators & delimiters: = == != < <= > >= && || ! + - * / ( ) { } ; , : .
+    new_val = 1;
+    _leadingUnderscore123 = 0;
+    if ((new_val == 1 && !_leadingUnderscore123) || (zero != 0)) {
+        if (1 < 2 && 2 <= 2 && 3 > 2 && 3 >= 3) {
+            print("Operators OK\n");
+        }
+    } else {
+        print("Unreachable\n");
+    }
+
+    // 5. Extension keywords: if-only, for, break, continue, while, new, class, this, super
+    ClassyObject obj;
+    obj = new ClassyObject;
+    obj.init(7, "test");
+    print(obj.describe(), "\n");
+
+    elseCount = 0;
+    for (forIndex = 0; forIndex < 5; forIndex = forIndex + 1) {
+        if (forIndex == 1) {
+            continue;
+        }
+        if (forIndex == 4) {
+            break;
+        }
+        elseCount = elseCount + forIndex; // adds 0 + 2 + 3 = 5
+    }
+
+    whileLoop = 0;
+    while (whileLoop < 2) {
+        whileLoop = whileLoop + 1;
+    }
+
+    print((string)elseCount, "|", (string)whileLoop, "\n");
+}

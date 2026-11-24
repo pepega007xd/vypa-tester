@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 12
+
+class A : Object {
+    void test(void) {
+        this;
+    }
+}
+
+void main(void) {}

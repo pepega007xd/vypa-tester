@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+
+int makeInt(void) { return 0; }
+
+void main(void) {
+    makeInt() = 42;
+}

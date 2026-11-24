@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 13
+
+void pair(int a, int b) {}
+
+void main(void) {
+    pair(1);
+}

@@ -1,0 +1,19 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+void countdown(int start) {
+    int i;
+    for (i = start; i >= 0; i = i - 1) {
+        print((string)i, " ");
+        if (i == 2) {
+            print("STOP\n");
+            return;
+        }
+    }
+    print("UNREACHABLE\n");
+}
+
+void main(void) {
+    countdown(5);
+}

@@ -1,0 +1,30 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+void main(void) {
+    int outer;
+    int inner;
+    int hits;
+    hits = 0;
+
+    for (outer = 0; outer < 4; outer = outer + 1) {
+        if (outer == 1) {
+            continue; // skips outer=1 only
+        }
+        inner = 0;
+        while (inner < 5) {
+            inner = inner + 1;
+            if (inner == 2) {
+                continue; // skips inner=2 only
+            }
+            if (inner == 4) {
+                break; // breaks inner loop only (so inner runs 1, 3 -> 2 hits per outer)
+            }
+            hits = hits + 1;
+        }
+    }
+
+    // outer runs for 0, 2, 3 (3 times) * 2 inner hits = 6
+    print((string)hits, "\n");
+}

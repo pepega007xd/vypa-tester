@@ -1,0 +1,23 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+// /* Block comment opener inside line comment does not need closing */
+void main(void) {
+    /* // Line comment inside block comment does not hide closing */
+    /* /* Inner opener ignored; first closer ends comment: */ int afterComment;
+    string backslashAtEnd;
+    string hexPlusDigit;
+    string lowerHex;
+    string mixedQuotes;
+
+    afterComment = 99;
+    backslashAtEnd = "\\";
+    hexPlusDigit = "\x0000412";       // Must parse as \x000041 ('A') + '2' -> "A2"
+    lowerHex = "\x000061\x00007a";    // Lowercase hex digits -> "az"
+    mixedQuotes = "\"'\\\"";          // -> "'\"
+
+    if (!0 && 1 != 2) {
+        print((string)afterComment, "|", backslashAtEnd, "|", hexPlusDigit, "|", lowerHex, "|", mixedQuotes, "\n");
+    } else {}
+}
+// Final line comment directly at EOF without newline

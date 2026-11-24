@@ -1,0 +1,13 @@
+// TEST-INFO compiler-return-code 13
+
+class Base : Object {
+    void greet(string msg) {}
+}
+
+class Sub : Base {
+    void test(void) {
+        super.greet(123);
+    }
+}
+
+void main(void) {}

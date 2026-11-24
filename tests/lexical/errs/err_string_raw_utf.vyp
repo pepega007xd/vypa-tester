@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 11
+
+void main(void){
+    print("příliš žluťoučký kůň");
+    return;
+}

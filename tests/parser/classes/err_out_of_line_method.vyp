@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 12
+
+class A : Object {}
+
+void A.foo(void) {}
+
+void main(void) {}

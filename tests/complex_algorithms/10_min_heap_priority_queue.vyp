@@ -1,0 +1,124 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class HeapNode : Object {
+    int val;
+    HeapNode parent;
+    HeapNode left;
+    HeapNode right;
+    HeapNode init(int v) { this.val = v; return this; }
+}
+
+class MinHeap : Object {
+    HeapNode root;
+    int size;
+
+    HeapNode getNodeAt(int index) {
+        int bit;
+        HeapNode curr;
+        bit = 1;
+        while (bit * 2 <= index) {
+            bit = bit * 2;
+        }
+        bit = bit / 2;
+        curr = this.root;
+        while (bit > 0) {
+            int bitVal;
+            bitVal = (index / bit) - ((index / (bit * 2)) * 2);
+            if (bitVal == 0) {
+                curr = curr.left;
+            } else {
+                curr = curr.right;
+            }
+            bit = bit / 2;
+        }
+        return curr;
+    }
+
+    void push(int v) {
+        HeapNode node;
+        node = (new HeapNode).init(v);
+        this.size = this.size + 1;
+        if (this.size == 1) {
+            this.root = node;
+            return;
+        }
+        HeapNode par;
+        par = this.getNodeAt(this.size / 2);
+        node.parent = par;
+        if ((this.size - (this.size / 2) * 2) == 0) {
+            par.left = node;
+        } else {
+            par.right = node;
+        }
+        while (node.parent) {
+            if (node.val >= node.parent.val) {
+                break;
+            }
+            int tmp;
+            tmp = node.val;
+            node.val = node.parent.val;
+            node.parent.val = tmp;
+            node = node.parent;
+        }
+    }
+
+    int popMin(void) {
+        int minVal;
+        HeapNode nullNode;
+        minVal = this.root.val;
+        if (this.size == 1) {
+            this.root = nullNode;
+            this.size = 0;
+            return minVal;
+        }
+        HeapNode last;
+        last = this.getNodeAt(this.size);
+        this.root.val = last.val;
+        if (last.parent.left == last) {
+            last.parent.left = nullNode;
+        } else {
+            last.parent.right = nullNode;
+        }
+        this.size = this.size - 1;
+
+        HeapNode curr;
+        curr = this.root;
+        while (curr.left) {
+            HeapNode smallest;
+            smallest = curr.left;
+            if (curr.right) {
+                if (curr.right.val < smallest.val) {
+                    smallest = curr.right;
+                }
+            }
+            if (curr.val <= smallest.val) {
+                break;
+            }
+            int tmp;
+            tmp = curr.val;
+            curr.val = smallest.val;
+            smallest.val = tmp;
+            curr = smallest;
+        }
+        return minVal;
+    }
+}
+
+void main(void) {
+    MinHeap h;
+    h = new MinHeap;
+    h.push(35);
+    h.push(12);
+    h.push(78);
+    h.push(5);
+    h.push(19);
+    h.push(5);
+    h.push(42);
+
+    while (h.size > 0) {
+        print((string)h.popMin(), " ");
+    }
+    print("\n");
+}

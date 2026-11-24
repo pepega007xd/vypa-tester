@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 13
+
+class Alpha : Object {}
+class Beta : Object {}
+
+void main(void) {
+    Alpha a;
+    Beta b;
+    b = new Beta;
+    a = b;
+}

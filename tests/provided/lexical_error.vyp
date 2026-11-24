@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 11
+// example of lexical error - unfinished string literal
+void main(void){
+  string s;
+  s = "neukonceny retezec;
+}

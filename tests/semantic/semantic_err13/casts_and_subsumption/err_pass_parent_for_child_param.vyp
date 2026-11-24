@@ -1,0 +1,12 @@
+// TEST-INFO compiler-return-code 13
+
+class Parent : Object {}
+class Child : Parent {}
+
+void consumeChild(Child c) {}
+
+void main(void) {
+    Parent p;
+    p = new Child;
+    consumeChild(p);
+}

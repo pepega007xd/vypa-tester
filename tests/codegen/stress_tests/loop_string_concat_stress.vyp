@@ -1,0 +1,13 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    string acc;
+    int i;
+    acc = "";
+    for (i = 0; i < 25; i = i + 1) {
+        acc = acc + "ab";
+    }
+    print((string)length(acc), "|", subStr(acc, 0, 4), "|", subStr(acc, 46, 4), "\n");
+}

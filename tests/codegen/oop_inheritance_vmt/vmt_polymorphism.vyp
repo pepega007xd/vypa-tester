@@ -1,0 +1,57 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Shape : Object {
+    int id;
+
+    void setId(int newId) {
+        this.id = newId;
+    }
+
+    int area(void) {
+        return 0;
+    }
+
+    string summary(void) {
+        return this.getClass() + "%" + (string)this.id + "=" + (string)this.area();
+    }
+}
+
+class Rectangle : Shape {
+    int w;
+    int h;
+
+    void init(int id, int w, int h) {
+        this.setId(id);
+        this.w = w;
+        this.h = h;
+    }
+
+    int area(void) {
+        return this.w * this.h;
+    }
+}
+
+class Square : Rectangle {
+    void initSquare(int id, int side) {
+        this.init(id, side, side);
+    }
+}
+
+void main(void) {
+    Shape s1;
+    Shape s2;
+    Rectangle r;
+    Square sq;
+
+    r = new Rectangle;
+    r.init(1, 4, 5);
+
+    sq = new Square;
+    sq.initSquare(2, 6);
+
+    s1 = r;
+    s2 = sq;
+
+    print(s1.summary(), "|", s2.summary(), "\n");
+}

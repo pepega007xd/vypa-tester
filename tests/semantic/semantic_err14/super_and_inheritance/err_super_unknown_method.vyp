@@ -1,0 +1,13 @@
+// TEST-INFO compiler-return-code 14
+
+class Base : Object {
+    void foo(void) {}
+}
+
+class Sub : Base {
+    void bar(void) {
+        super.doesNotExist();
+    }
+}
+
+void main(void) {}

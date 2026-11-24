@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+
+void doNothing(void) {}
+
+void main(void) {
+    int x;
+    x = doNothing();
+}

@@ -1,0 +1,82 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class Neighbor : Object {
+    int id;
+    Neighbor next;
+    Neighbor init(int i, Neighbor n) { this.id = i; this.next = n; return this; }
+}
+
+class DNode : Object {
+    int id;
+    int color; // 0=white, 1=gray, 2=black
+    Neighbor out;
+    DNode next;
+    DNode init(int i, DNode n) { this.id = i; this.next = n; return this; }
+}
+
+DNode findDNode(DNode g, int id) {
+    while (g) {
+        if (g.id == id) { return g; }
+        g = g.next;
+    }
+    return g;
+}
+
+int dfsHasCycle(DNode g, DNode u) {
+    Neighbor e;
+    u.color = 1;
+    e = u.out;
+    while (e) {
+        DNode v;
+        v = findDNode(g, e.id);
+        if (v.color == 1) {
+            return 1;
+        }
+        if (v.color == 0) {
+            if (dfsHasCycle(g, v)) {
+                return 1;
+            }
+        }
+        e = e.next;
+    }
+    u.color = 2;
+    return 0;
+}
+
+int checkGraphCycle(DNode g) {
+    DNode curr;
+    curr = g;
+    while (curr) {
+        if (curr.color == 0) {
+            if (dfsHasCycle(g, curr)) {
+                return 1;
+            }
+        }
+        curr = curr.next;
+    }
+    return 0;
+}
+
+void main(void) {
+    DNode g1;
+    DNode g2;
+    int i;
+
+    for (i = 3; i >= 0; i = i - 1) {
+        g1 = (new DNode).init(i, g1);
+        g2 = (new DNode).init(i, g2);
+    }
+
+    findDNode(g1, 0).out = (new Neighbor).init(1, (new Neighbor).init(2, findDNode(g1, 0).out));
+    findDNode(g1, 1).out = (new Neighbor).init(3, findDNode(g1, 1).out);
+    findDNode(g1, 2).out = (new Neighbor).init(3, findDNode(g1, 2).out);
+
+    findDNode(g2, 0).out = (new Neighbor).init(1, findDNode(g2, 0).out);
+    findDNode(g2, 1).out = (new Neighbor).init(2, findDNode(g2, 1).out);
+    findDNode(g2, 2).out = (new Neighbor).init(3, findDNode(g2, 2).out);
+    findDNode(g2, 3).out = (new Neighbor).init(1, findDNode(g2, 3).out);
+
+    print("DAG_CYCLE:", (string)checkGraphCycle(g1), " CYCLIC_CYCLE:", (string)checkGraphCycle(g2), "\n");
+}

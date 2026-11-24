@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+
+void nothing(void) {}
+
+void main(void) {
+    string s;
+    s = (string)nothing();
+}

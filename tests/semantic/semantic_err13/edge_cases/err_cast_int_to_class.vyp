@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 13
+
+void main(void) {
+    Object o;
+    o = (Object)5;
+}

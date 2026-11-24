@@ -1,0 +1,15 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+class Empty : Object {}
+
+void main(void) {
+    int uninitInt;
+    string uninitStr;
+    Empty uninitObj;
+
+    if (!uninitObj) {
+        print((string)uninitInt, "|[", uninitStr, "]|NULL_OK\n");
+    }
+}

@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 14
+
+UnknownType produce(void) {}
+
+void main(void) {}

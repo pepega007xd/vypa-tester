@@ -1,0 +1,98 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class BSTNode : Object {
+    int key;
+    BSTNode left;
+    BSTNode right;
+
+    BSTNode init(int k) {
+        this.key = k;
+        return this;
+    }
+
+    BSTNode insert(int k) {
+        if (k < this.key) {
+            if (this.left) {
+                this.left = this.left.insert(k);
+            } else {
+                this.left = (new BSTNode).init(k);
+            }
+        }
+        if (k > this.key) {
+            if (this.right) {
+                this.right = this.right.insert(k);
+            } else {
+                this.right = (new BSTNode).init(k);
+            }
+        }
+        return this;
+    }
+
+    int contains(int k) {
+        if (k == this.key) {
+            return 1;
+        }
+        if (k < this.key) {
+            if (this.left) {
+                return this.left.contains(k);
+            }
+        }
+        if (k > this.key) {
+            if (this.right) {
+                return this.right.contains(k);
+            }
+        }
+        return 0;
+    }
+
+    int height(void) {
+        int lh;
+        int rh;
+        lh = 0;
+        rh = 0;
+        if (this.left) {
+            lh = this.left.height();
+        }
+        if (this.right) {
+            rh = this.right.height();
+        }
+        if (lh > rh) {
+            return lh + 1;
+        }
+        return rh + 1;
+    }
+
+    string inorder(void) {
+        string res;
+        res = "";
+        if (this.left) {
+            res = res + this.left.inorder() + " ";
+        }
+        res = res + (string)this.key;
+        if (this.right) {
+            res = res + " " + this.right.inorder();
+        }
+        return res;
+    }
+}
+
+void main(void) {
+    BSTNode root;
+    int n;
+    int i;
+    n = readInt();
+    for (i = 0; i < n; i = i + 1) {
+        int v;
+        v = readInt();
+        if (!root) {
+            root = (new BSTNode).init(v);
+        } else {
+            root = root.insert(v);
+        }
+    }
+    print("INORDER:", root.inorder(), "\n");
+    print("HEIGHT:", (string)root.height(), "\n");
+    print("HAS_42:", (string)root.contains(42), " HAS_99:", (string)root.contains(99), "\n");
+}

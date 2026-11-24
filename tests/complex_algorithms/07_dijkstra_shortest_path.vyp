@@ -1,0 +1,111 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class Edge : Object {
+    int to;
+    int weight;
+    Edge next;
+    Edge init(int t, int w, Edge n) { this.to = t; this.weight = w; this.next = n; return this; }
+}
+
+class Vertex : Object {
+    int id;
+    int dist;
+    int visited;
+    Edge edges;
+    Vertex next;
+
+    Vertex init(int i, Vertex n) {
+        this.id = i;
+        this.dist = 999999;
+        this.visited = 0;
+        this.next = n;
+        return this;
+    }
+}
+
+Vertex findVertex(Vertex head, int id) {
+    while (head) {
+        if (head.id == id) { return head; }
+        head = head.next;
+    }
+    return head;
+}
+
+void addDirectedEdge(Vertex graph, int u, int v, int w) {
+    Vertex vu;
+    vu = findVertex(graph, u);
+    vu.edges = (new Edge).init(v, w, vu.edges);
+}
+
+void main(void) {
+    Vertex graph;
+    Vertex start;
+    int numV;
+    int i;
+
+    numV = 5;
+    for (i = numV - 1; i >= 0; i = i - 1) {
+        graph = (new Vertex).init(i, graph);
+    }
+
+    addDirectedEdge(graph, 0, 1, 10);
+    addDirectedEdge(graph, 0, 3, 5);
+    addDirectedEdge(graph, 1, 2, 1);
+    addDirectedEdge(graph, 1, 3, 2);
+    addDirectedEdge(graph, 2, 4, 4);
+    addDirectedEdge(graph, 3, 1, 3);
+    addDirectedEdge(graph, 3, 2, 9);
+    addDirectedEdge(graph, 3, 4, 2);
+    addDirectedEdge(graph, 4, 0, 7);
+    addDirectedEdge(graph, 4, 2, 6);
+
+    start = findVertex(graph, 0);
+    start.dist = 0;
+
+    for (i = 0; i < numV; i = i + 1) {
+        Vertex best;
+        Vertex curr;
+        Edge e;
+
+        curr = graph;
+        while (curr) {
+            if (!curr.visited) {
+                if (!best) {
+                    best = curr;
+                } else {
+                    if (curr.dist < best.dist) {
+                        best = curr;
+                    }
+                }
+            }
+            curr = curr.next;
+        }
+
+        if (!best) {
+            break;
+        }
+        if (best.dist == 999999) {
+            break;
+        }
+        best.visited = 1;
+
+        e = best.edges;
+        while (e) {
+            Vertex target;
+            target = findVertex(graph, e.to);
+            if (best.dist + e.weight < target.dist) {
+                target.dist = best.dist + e.weight;
+            }
+            e = e.next;
+        }
+    }
+
+    for (i = 0; i < numV; i = i + 1) {
+        Vertex v;
+        v = findVertex(graph, i);
+        print("0->", (string)i, ":", (string)v.dist, " ");
+    }
+    print("\n");
+}

@@ -1,0 +1,105 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class Cell : Object {
+    int col;
+    int val;
+    Cell next;
+    Cell init(int c, int v, Cell n) { this.col = c; this.val = v; this.next = n; return this; }
+}
+
+class Row : Object {
+    int rowIdx;
+    Cell cells;
+    Row next;
+    Row init(int r, int cols, Row n) {
+        int c;
+        this.rowIdx = r;
+        this.next = n;
+        for (c = cols - 1; c >= 0; c = c - 1) {
+            this.cells = (new Cell).init(c, 0, this.cells);
+        }
+        return this;
+    }
+}
+
+class Matrix : Object {
+    Row rows;
+
+    Matrix init(int rCount, int cCount) {
+        int r;
+        for (r = rCount - 1; r >= 0; r = r - 1) {
+            this.rows = (new Row).init(r, cCount, this.rows);
+        }
+        return this;
+    }
+
+    Cell getCell(int r, int c) {
+        Row rr;
+        Cell cc;
+        rr = this.rows;
+        while (rr.rowIdx != r) { rr = rr.next; }
+        cc = rr.cells;
+        while (cc.col != c) { cc = cc.next; }
+        return cc;
+    }
+
+    int get(int r, int c) { return this.getCell(r, c).val; }
+    void set(int r, int c, int v) { this.getCell(r, c).val = v; }
+}
+
+class Item : Object {
+    int idx;
+    int weight;
+    int value;
+    Item next;
+    Item init(int i, int w, int v, Item n) {
+        this.idx = i;
+        this.weight = w;
+        this.value = v;
+        this.next = n;
+        return this;
+    }
+}
+
+void main(void) {
+    Item items;
+    Matrix dp;
+    int n;
+    int cap;
+    int i;
+    int w;
+
+    n = 4;
+    cap = 7;
+    items = (new Item).init(4, 5, 7, items);
+    items = (new Item).init(3, 4, 5, items);
+    items = (new Item).init(2, 3, 4, items);
+    items = (new Item).init(1, 1, 1, items);
+
+    dp = (new Matrix).init(n + 1, cap + 1);
+
+    for (i = 1; i <= n; i = i + 1) {
+        Item it;
+        it = items;
+        while (it.idx != i) { it = it.next; }
+        for (w = 0; w <= cap; w = w + 1) {
+            int withoutItem;
+            withoutItem = dp.get(i - 1, w);
+            if (it.weight <= w) {
+                int withItem;
+                withItem = it.value + dp.get(i - 1, w - it.weight);
+                if (withItem > withoutItem) {
+                    dp.set(i, w, withItem);
+                } else {
+                    dp.set(i, w, withoutItem);
+                }
+            } else {
+                dp.set(i, w, withoutItem);
+            }
+        }
+    }
+
+    print("MAX_VALUE:", (string)dp.get(n, cap), "\n");
+}

@@ -1,0 +1,27 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Leaf : Object {
+    int val;
+    void set(int v) { this.val = v; }
+}
+
+class Branch : Object {
+    Leaf leaf;
+    Leaf getLeaf(void) { return this.leaf; }
+}
+
+class Root : Object {
+    Branch branch;
+    Branch getBranch(void) { return this.branch; }
+}
+
+void main(void) {
+    Root r;
+    r = new Root;
+    r.branch = new Branch;
+    r.branch.leaf = new Leaf;
+
+    r.getBranch().getLeaf().set(42);
+    print((string)r.getBranch().getLeaf().val, "\n");
+}

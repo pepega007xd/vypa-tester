@@ -1,0 +1,20 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    int count;
+    int i;
+    int sum;
+    string label;
+
+    label = readString();
+    count = readInt();
+    sum = 0;
+
+    for (i = 0; i < count; i = i + 1) {
+        sum = sum + readInt();
+    }
+
+    print(label, "=", (string)sum, "\n");
+}

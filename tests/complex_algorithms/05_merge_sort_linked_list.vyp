@@ -1,0 +1,81 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class ListNode : Object {
+    int val;
+    ListNode next;
+    ListNode init(int v, ListNode n) {
+        this.val = v;
+        this.next = n;
+        return this;
+    }
+}
+
+ListNode getMiddle(ListNode head) {
+    ListNode slow;
+    ListNode fast;
+    if (!head) {
+        return head;
+    }
+    slow = head;
+    fast = head.next;
+    while (fast) {
+        if (!fast.next) {
+            break;
+        }
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+}
+
+ListNode mergeSorted(ListNode a, ListNode b) {
+    if (!a) {
+        return b;
+    }
+    if (!b) {
+        return a;
+    }
+    if (a.val <= b.val) {
+        a.next = mergeSorted(a.next, b);
+        return a;
+    }
+    b.next = mergeSorted(a, b.next);
+    return b;
+}
+
+ListNode mergeSort(ListNode head) {
+    ListNode mid;
+    ListNode secondHalf;
+    ListNode nullNode;
+    if (!head) {
+        return head;
+    }
+    if (!head.next) {
+        return head;
+    }
+    mid = getMiddle(head);
+    secondHalf = mid.next;
+    mid.next = nullNode;
+    return mergeSorted(mergeSort(head), mergeSort(secondHalf));
+}
+
+void main(void) {
+    ListNode head;
+    int n;
+    int i;
+    n = readInt();
+    for (i = 0; i < n; i = i + 1) {
+        head = (new ListNode).init(readInt(), head);
+    }
+    head = mergeSort(head);
+    while (head) {
+        print((string)head.val);
+        if (head.next) {
+            print(" ");
+        }
+        head = head.next;
+    }
+    print("\n");
+}

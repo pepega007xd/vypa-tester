@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 14
+
+class Sample : Object {
+    void run(void) {
+        this.nonExistentAttr = 1;
+    }
+}
+
+void main(void) {}

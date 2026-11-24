@@ -1,0 +1,104 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class TrieEdge : Object {
+    string ch;
+    TrieNode target;
+    TrieEdge next;
+    TrieEdge init(string c, TrieNode t, TrieEdge n) {
+        this.ch = c;
+        this.target = t;
+        this.next = n;
+        return this;
+    }
+}
+
+class TrieNode : Object {
+    int prefixCount;
+    int isEnd;
+    TrieEdge children;
+
+    TrieNode findChild(string c) {
+        TrieEdge e;
+        e = this.children;
+        while (e) {
+            if (e.ch == c) { return e.target; }
+            e = e.next;
+        }
+        TrieNode nullNode;
+        return nullNode;
+    }
+
+    TrieNode getOrCreateChild(string c) {
+        TrieNode found;
+        found = this.findChild(c);
+        if (found) { return found; }
+        found = new TrieNode;
+        this.children = (new TrieEdge).init(c, found, this.children);
+        return found;
+    }
+}
+
+class Trie : Object {
+    TrieNode root;
+
+    Trie init(void) {
+        this.root = new TrieNode;
+        return this;
+    }
+
+    void insert(string word) {
+        TrieNode curr;
+        int i;
+        int len;
+        curr = this.root;
+        len = length(word);
+        for (i = 0; i < len; i = i + 1) {
+            curr = curr.getOrCreateChild(subStr(word, i, 1));
+            curr.prefixCount = curr.prefixCount + 1;
+        }
+        curr.isEnd = 1;
+    }
+
+    int countPrefix(string prefix) {
+        TrieNode curr;
+        int i;
+        int len;
+        curr = this.root;
+        len = length(prefix);
+        for (i = 0; i < len; i = i + 1) {
+            curr = curr.findChild(subStr(prefix, i, 1));
+            if (!curr) { return 0; }
+        }
+        return curr.prefixCount;
+    }
+
+    int searchWord(string word) {
+        TrieNode curr;
+        int i;
+        int len;
+        curr = this.root;
+        len = length(word);
+        for (i = 0; i < len; i = i + 1) {
+            curr = curr.findChild(subStr(word, i, 1));
+            if (!curr) { return 0; }
+        }
+        return curr.isEnd;
+    }
+}
+
+void main(void) {
+    Trie t;
+    t = (new Trie).init();
+    t.insert("compiler");
+    t.insert("compile");
+    t.insert("compute");
+    t.insert("cat");
+
+    print((string)t.countPrefix("comp"), "|");
+    print((string)t.countPrefix("compil"), "|");
+    print((string)t.searchWord("compil"), "|");
+    print((string)t.searchWord("compile"), "|");
+    print((string)t.countPrefix("xyz"), "\n");
+}

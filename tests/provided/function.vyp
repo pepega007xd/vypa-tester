@@ -1,0 +1,13 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// example of simple function definition and its call from main function
+
+int Increment(int q) {
+  return q + 1;
+}
+
+void main(void) {
+	int a;
+	a = Increment(6);
+	print(a, "\n");
+}

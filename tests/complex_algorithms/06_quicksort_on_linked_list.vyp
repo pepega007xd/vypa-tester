@@ -1,0 +1,76 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class QItem : Object {
+    int val;
+    QItem next;
+    QItem init(int v, QItem n) { this.val = v; this.next = n; return this; }
+}
+
+QItem appendAll(QItem a, QItem b) {
+    QItem curr;
+    if (!a) { return b; }
+    curr = a;
+    while (curr.next) {
+        curr = curr.next;
+    }
+    curr.next = b;
+    return a;
+}
+
+QItem quickSort(QItem head) {
+    QItem nullRef;
+    QItem less;
+    QItem equal;
+    QItem greater;
+    QItem curr;
+    int pivot;
+
+    if (!head) {
+        return head;
+    }
+    if (!head.next) {
+        return head;
+    }
+    pivot = head.val;
+    curr = head;
+    while (curr) {
+        QItem nxt;
+        nxt = curr.next;
+        curr.next = nullRef;
+        if (curr.val < pivot) {
+            curr.next = less;
+            less = curr;
+        } else {
+            if (curr.val > pivot) {
+                curr.next = greater;
+                greater = curr;
+            } else {
+                curr.next = equal;
+                equal = curr;
+            }
+        }
+        curr = nxt;
+    }
+    less = quickSort(less);
+    greater = quickSort(greater);
+    return appendAll(appendAll(less, equal), greater);
+}
+
+void main(void) {
+    QItem list;
+    int i;
+    int seed;
+    seed = 7;
+    for (i = 0; i < 12; i = i + 1) {
+        seed = (seed * 13 + 5) - ((seed * 13 + 5) / 31) * 31;
+        list = (new QItem).init(seed, list);
+    }
+    list = quickSort(list);
+    while (list) {
+        print((string)list.val, " ");
+        list = list.next;
+    }
+    print("\n");
+}

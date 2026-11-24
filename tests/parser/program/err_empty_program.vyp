@@ -1,0 +1,2 @@
+// TEST-INFO compiler-return-code 14
+// Only comments; VYPlanguage requires at least one top-level definition

@@ -1,0 +1,30 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Base : Object {
+    int baseVal;
+}
+
+class Derived : Base {
+    string tag;
+}
+
+void main(void) {
+    Base b;
+    Derived d1;
+    Derived d2;
+
+    d1 = new Derived;
+    // Check default field initialization on heap objects (int=0, string="")
+    print((string)d1.baseVal, "|[", d1.tag, "]|");
+
+    d1.baseVal = 77;
+    d1.tag = "ok";
+    b = d1;
+
+    // Explicit downcast
+    d2 = (Derived)b;
+    print((string)d2.baseVal, "|", d2.tag, "|");
+    print((string)(d1 == d2), "|", (string)(d1 != new Derived), "|");
+    print(b.getClass(), "\n");
+}

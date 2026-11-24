@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 14
+
+void main(void) {
+    string s;
+    int n;
+    s = "hello";
+    n = s.length;
+}

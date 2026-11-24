@@ -1,0 +1,19 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void main(void) {
+    string a;
+    string b;
+    string c;
+    a = "apple";
+    b = "banana";
+    c = "apple";
+
+    print((string)(a == c), "|");
+    print((string)(a != b), "|");
+    print((string)(a < b), "|");
+    print((string)(a <= c), "|");
+    print((string)(b > a), "|");
+    print((string)(b >= b), "|");
+    print((string)("" < "a"), "\n");
+}

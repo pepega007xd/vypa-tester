@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 13
+
+void main(void) {
+    int r;
+    r = 5 == "5";
+}

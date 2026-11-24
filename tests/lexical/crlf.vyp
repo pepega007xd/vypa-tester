@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+void main(void) {
+    // CRLF line comment
+    int x;
+    x = 123;
+    print((string)x, "\n");
+}

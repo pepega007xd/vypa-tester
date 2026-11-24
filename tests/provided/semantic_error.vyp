@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+// example of semantic error - used undefined variable q
+
+void main(void) {
+	int w;
+	w = q;
+}

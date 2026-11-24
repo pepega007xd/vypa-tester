@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 13
+
+class A : Object {}
+
+void main(void) {
+    A a;
+    string s;
+    a = new A;
+    // (string) cast only converts int -> string, NOT Object -> string (use a.toString())
+    s = (string)a;
+}

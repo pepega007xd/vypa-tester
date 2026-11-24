@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 12
+
+void main(void) {
+    else {
+        print("No matching if\n");
+    }
+}

@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 14
+
+class DirectChild : Object {
+    void test(void) {
+        super.notOnObject();
+    }
+}
+
+void main(void) {}

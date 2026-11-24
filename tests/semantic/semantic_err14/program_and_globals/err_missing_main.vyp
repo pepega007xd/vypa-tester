@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 14
+
+void helper(void) {
+    print("No main function\n");
+}

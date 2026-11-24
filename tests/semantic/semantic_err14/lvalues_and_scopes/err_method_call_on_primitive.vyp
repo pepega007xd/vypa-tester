@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 14
+
+void main(void) {
+    int x;
+    string s;
+    x = 10;
+    s = x.toString();
+}

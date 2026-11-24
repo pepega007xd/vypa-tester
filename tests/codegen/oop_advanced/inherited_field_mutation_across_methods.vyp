@@ -1,0 +1,32 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Counter : Object {
+    int count;
+
+    void incBy(int n) {
+        this.count = this.count + n;
+    }
+}
+
+class StepCounter : Counter {
+    int step;
+
+    void init(int s) {
+        this.step = s;
+    }
+
+    void tick(void) {
+        this.incBy(this.step);
+    }
+}
+
+void main(void) {
+    StepCounter sc;
+    sc = new StepCounter;
+    sc.init(4);
+    sc.tick();
+    sc.tick();
+    sc.incBy(1);
+    print((string)sc.count, "\n");
+}

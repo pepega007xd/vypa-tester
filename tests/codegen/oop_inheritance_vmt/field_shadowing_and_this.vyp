@@ -1,0 +1,25 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Box : Object {
+    int value;
+
+    Box set(int value) {
+        // Parameter 'value' shadows attribute 'this.value'
+        this.value = value;
+        return this;
+    }
+
+    int compute(int delta) {
+        int value;
+        // Local 'value' shadows attribute 'this.value'
+        value = delta * 2;
+        return this.value + value;
+    }
+}
+
+void main(void) {
+    Box b;
+    b = new Box;
+    print((string)b.set(10).compute(3), "\n");
+}

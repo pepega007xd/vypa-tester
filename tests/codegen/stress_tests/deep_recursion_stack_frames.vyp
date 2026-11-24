@@ -1,0 +1,18 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+int sumDown(int n, string tag) {
+    int localKeep;
+    string localStr;
+    localKeep = n;
+    localStr = tag;
+    if (n <= 0) {
+        return 0;
+    }
+    return localKeep + sumDown(n - 1, localStr);
+}
+
+void main(void) {
+    print((string)sumDown(50, "frame"), "\n");
+}

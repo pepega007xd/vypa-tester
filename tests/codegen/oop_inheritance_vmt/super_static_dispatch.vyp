@@ -1,0 +1,26 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class A : Object {
+    string chain(void) {
+        return "A";
+    }
+}
+
+class B : A {
+    string chain(void) {
+        return super.chain() + "->B";
+    }
+}
+
+class C : B {
+    string chain(void) {
+        return super.chain() + "->C";
+    }
+}
+
+void main(void) {
+    A poly;
+    poly = new C;
+    print(poly.chain(), "\n");
+}

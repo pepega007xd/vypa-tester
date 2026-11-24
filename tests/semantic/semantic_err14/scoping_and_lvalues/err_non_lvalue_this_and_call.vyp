@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 14
+
+class A : Object {
+    void test(void) {
+        this = new A;
+    }
+}
+
+void main(void) {}

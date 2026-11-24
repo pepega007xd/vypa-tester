@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 27
+
+void main(void) {
+    int x;
+    x = 50 / (6 - 2 * 3);
+    print((string)x);
+}

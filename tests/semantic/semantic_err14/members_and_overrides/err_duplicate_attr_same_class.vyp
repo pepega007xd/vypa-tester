@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 14
+
+class Point : Object {
+    int x;
+    int x;
+}
+
+void main(void) {}

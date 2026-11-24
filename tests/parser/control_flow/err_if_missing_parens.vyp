@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 12
+// TEST-INFO required-extensions IFONLY
+
+void main(void) {
+    if 1 {
+        print("Missing parens\n");
+    }
+}

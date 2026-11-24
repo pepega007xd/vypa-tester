@@ -1,0 +1,125 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class Entry : Object {
+    string key;
+    int value;
+    Entry next;
+    Entry init(string k, int v, Entry n) { this.key = k; this.value = v; this.next = n; return this; }
+}
+
+class Bucket : Object {
+    int index;
+    Entry head;
+    Bucket next;
+    Bucket init(int idx, Bucket n) { this.index = idx; this.next = n; return this; }
+}
+
+class HashMap : Object {
+    Bucket buckets;
+    int capacity;
+
+    HashMap init(int cap) {
+        int i;
+        this.capacity = cap;
+        for (i = cap - 1; i >= 0; i = i - 1) {
+            this.buckets = (new Bucket).init(i, this.buckets);
+        }
+        return this;
+    }
+
+    int hash(string key) {
+        int h;
+        int i;
+        int len;
+        h = 0;
+        len = length(key);
+        for (i = 0; i < len; i = i + 1) {
+            string ch;
+            ch = subStr(key, i, 1);
+            h = h * 31 + length(ch) + i * 7;
+            if (ch == "a") { h = h + 1; }
+            if (ch == "b") { h = h + 2; }
+            if (ch == "c") { h = h + 3; }
+            if (ch == "d") { h = h + 4; }
+            if (ch == "e") { h = h + 5; }
+        }
+        if (h < 0) { h = 0 - h; }
+        return h - (h / this.capacity) * this.capacity;
+    }
+
+    Bucket getBucket(int idx) {
+        Bucket b;
+        b = this.buckets;
+        while (b) {
+            if (b.index == idx) { return b; }
+            b = b.next;
+        }
+        return b;
+    }
+
+    void put(string key, int val) {
+        Bucket b;
+        Entry e;
+        b = this.getBucket(this.hash(key));
+        e = b.head;
+        while (e) {
+            if (e.key == key) {
+                e.value = val;
+                return;
+            }
+            e = e.next;
+        }
+        b.head = (new Entry).init(key, val, b.head);
+    }
+
+    int getOrDefault(string key, int defVal) {
+        Bucket b;
+        Entry e;
+        b = this.getBucket(this.hash(key));
+        e = b.head;
+        while (e) {
+            if (e.key == key) { return e.value; }
+            e = e.next;
+        }
+        return defVal;
+    }
+
+    void remove(string key) {
+        Bucket b;
+        Entry prev;
+        Entry curr;
+        b = this.getBucket(this.hash(key));
+        curr = b.head;
+        while (curr) {
+            if (curr.key == key) {
+                if (!prev) {
+                    b.head = curr.next;
+                } else {
+                    prev.next = curr.next;
+                }
+                return;
+            }
+            prev = curr;
+            curr = curr.next;
+        }
+    }
+}
+
+void main(void) {
+    HashMap map;
+    map = (new HashMap).init(4);
+    map.put("alpha", 10);
+    map.put("beta", 20);
+    map.put("gamma", 30);
+    map.put("delta", 40);
+    map.put("epsilon", 50);
+    map.put("beta", 99);
+
+    print((string)map.getOrDefault("alpha", 0 - 1), "|");
+    print((string)map.getOrDefault("beta", 0 - 1), "|");
+    map.remove("gamma");
+    print((string)map.getOrDefault("gamma", 0 - 1), "|");
+    print((string)map.getOrDefault("epsilon", 0 - 1), "\n");
+}

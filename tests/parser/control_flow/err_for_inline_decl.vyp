@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 12
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    for (int i = 0; i < 5; i = i + 1) {
+        print((string)i);
+    }
+}

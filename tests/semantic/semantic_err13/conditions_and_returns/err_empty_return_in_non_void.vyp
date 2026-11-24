@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 13
+
+int getNumber(void) {
+    return;
+}
+
+void main(void) {}

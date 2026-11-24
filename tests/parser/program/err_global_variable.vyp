@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 12
+
+int globalCounter;
+
+void main(void) {}

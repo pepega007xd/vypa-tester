@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+
+void main(void) {
+    Object o;
+    string c;
+    o = new Object;
+    c = o.getClass(42);
+}

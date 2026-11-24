@@ -1,0 +1,38 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+void main(void) {
+    int i;
+    int j;
+    int acc;
+    acc = 0;
+
+    // Crucial: 'continue' in a for loop MUST still execute the update clause (i = i + 1)!
+    for (i = 0; i < 6; i = i + 1) {
+        if (i == 2 || i == 4) {
+            continue;
+        }
+        acc = acc + i; // 0 + 1 + 3 + 5 = 9
+    }
+
+    // Nested for loops + empty-clause for(;;)
+    for (i = 1; i <= 3; i = i + 1) {
+        for (j = 1; j <= 3; j = j + 1) {
+            if (j == 3) {
+                break;
+            }
+            acc = acc + 1; // adds 2 per outer iteration -> +6 => 15
+        }
+    }
+
+    i = 0;
+    for (;;) {
+        i = i + 1;
+        if (i == 4) {
+            break;
+        }
+    }
+
+    print((string)acc, "|", (string)i, "\n");
+}

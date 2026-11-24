@@ -1,0 +1,23 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+void main(void) {
+    int x;
+    x = 100;
+    print((string)x, "|");
+
+    if (1) {
+        string x;
+        x = "inner";
+        print(x, "|");
+        if (1) {
+            int x;
+            x = 999;
+            print((string)x, "|");
+        }
+        print(x, "|");
+    }
+
+    print((string)x, "\n");
+}

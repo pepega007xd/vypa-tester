@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+void main ( void )
+{
+int var;
+var = 777;
+
+print(var, "\n");
+}  // end of main

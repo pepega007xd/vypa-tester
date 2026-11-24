@@ -1,0 +1,12 @@
+// TEST-INFO compiler-return-code 14
+
+class Parent : Object {
+    int value(void) { return 1; }
+}
+
+class Child : Parent {
+    // Cannot declare attribute with same name as inherited method
+    int value;
+}
+
+void main(void) {}

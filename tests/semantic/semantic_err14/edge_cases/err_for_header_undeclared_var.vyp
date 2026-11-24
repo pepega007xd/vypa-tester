@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 14
+// TEST-INFO required-extensions FOR
+
+void main(void) {
+    for (ghost = 0; ghost < 10; ghost = ghost + 1) {
+        print((string)ghost);
+    }
+}

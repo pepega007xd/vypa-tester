@@ -1,0 +1,77 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class ASTNode : Object {
+    int eval(void) { return 0; }
+    string format(void) { return ""; }
+}
+
+class NumNode : ASTNode {
+    int val;
+    NumNode init(int v) {
+        this.val = v;
+        return this;
+    }
+    int eval(void) { return this.val; }
+    string format(void) { return (string)this.val; }
+}
+
+class UnaryNegNode : ASTNode {
+    ASTNode inner;
+    UnaryNegNode init(ASTNode n) {
+        this.inner = n;
+        return this;
+    }
+    int eval(void) { return 0 - this.inner.eval(); }
+    string format(void) { return "(-" + this.inner.format() + ")"; }
+}
+
+class BinOpNode : ASTNode {
+    ASTNode left;
+    ASTNode right;
+    void setChildren(ASTNode l, ASTNode r) {
+        this.left = l;
+        this.right = r;
+    }
+    string opSymbol(void) { return "?"; }
+    string format(void) {
+        return "(" + this.left.format() + " " + this.opSymbol() + " " + this.right.format() + ")";
+    }
+}
+
+class AddNode : BinOpNode {
+    AddNode init(ASTNode l, ASTNode r) { super.setChildren(l, r); return this; }
+    string opSymbol(void) { return "+"; }
+    int eval(void) { return this.left.eval() + this.right.eval(); }
+}
+
+class SubNode : BinOpNode {
+    SubNode init(ASTNode l, ASTNode r) { super.setChildren(l, r); return this; }
+    string opSymbol(void) { return "-"; }
+    int eval(void) { return this.left.eval() - this.right.eval(); }
+}
+
+class MulNode : BinOpNode {
+    MulNode init(ASTNode l, ASTNode r) { super.setChildren(l, r); return this; }
+    string opSymbol(void) { return "*"; }
+    int eval(void) { return this.left.eval() * this.right.eval(); }
+}
+
+class DivNode : BinOpNode {
+    DivNode init(ASTNode l, ASTNode r) { super.setChildren(l, r); return this; }
+    string opSymbol(void) { return "/"; }
+    int eval(void) { return this.left.eval() / this.right.eval(); }
+}
+
+void main(void) {
+    // ((-5 + 17) * (20 - 8)) / 4 = (12 * 12) / 4 = 36
+    ASTNode expr;
+    expr = (new DivNode).init(
+        (new MulNode).init(
+            (new AddNode).init((new UnaryNegNode).init((new NumNode).init(5)), (new NumNode).init(17)),
+            (new SubNode).init((new NumNode).init(20), (new NumNode).init(8))
+        ),
+        (new NumNode).init(4)
+    );
+    print(expr.format(), " = ", (string)expr.eval(), "\n");
+}

@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 14
+
+int length(string s) {
+    return 0;
+}
+
+void main(void) {}

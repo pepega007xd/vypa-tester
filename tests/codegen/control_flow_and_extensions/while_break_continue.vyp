@@ -1,0 +1,23 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY
+
+void main(void) {
+    int i;
+    int total;
+    i = 0;
+    total = 0;
+
+    while (i < 10) {
+        i = i + 1;
+        if (i == 3 || i == 5) {
+            continue;
+        }
+        if (i == 8) {
+            break;
+        }
+        total = total + i; // 1 + 2 + 4 + 6 + 7 = 20
+    }
+
+    print((string)total, "\n");
+}

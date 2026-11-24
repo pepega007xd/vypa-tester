@@ -1,0 +1,8 @@
+// TEST-INFO compiler-return-code 13
+
+void voidProc(void) {}
+
+void main(void) {
+    int r;
+    r = voidProc() == voidProc();
+}

@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 13
+
+int getNumber(void) {
+    return "not_an_int";
+}
+
+void main(void) {}

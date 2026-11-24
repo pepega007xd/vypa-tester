@@ -1,0 +1,7 @@
+// TEST-INFO compiler-return-code 12
+
+class Outer : Object {
+    class Inner : Object {}
+}
+
+void main(void) {}

@@ -1,0 +1,14 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 28
+
+class Base : Object {}
+class Sub : Base {
+    int extra;
+}
+
+void main(void) {
+    Base b;
+    Sub s;
+    b = new Base;
+    s = (Sub)b;
+}

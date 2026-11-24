@@ -1,0 +1,48 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class Queen : Object {
+    int row;
+    int col;
+    Queen next;
+    Queen init(int r, int c, Queen n) { this.row = r; this.col = c; this.next = n; return this; }
+}
+
+int isSafe(Queen placed, int r, int c) {
+    while (placed) {
+        int dr;
+        int dc;
+        dr = r - placed.row;
+        dc = c - placed.col;
+        if (dc < 0) { dc = 0 - dc; }
+        if (placed.col == c || dr == dc) {
+            return 0;
+        }
+        placed = placed.next;
+    }
+    return 1;
+}
+
+int countQueens(int n, int row, Queen placed) {
+    int col;
+    int total;
+    if (row == n) {
+        return 1;
+    }
+    total = 0;
+    for (col = 0; col < n; col = col + 1) {
+        if (isSafe(placed, row, col)) {
+            total = total + countQueens(n, row + 1, (new Queen).init(row, col, placed));
+        }
+    }
+    return total;
+}
+
+void main(void) {
+    Queen empty;
+    print("N4:", (string)countQueens(4, 0, empty), " ");
+    print("N5:", (string)countQueens(5, 0, empty), " ");
+    print("N6:", (string)countQueens(6, 0, empty), " ");
+    print("N7:", (string)countQueens(7, 0, empty), "\n");
+}

@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 13
+
+class Dog : Object {}
+class Cat : Object {}
+
+void main(void) {
+    Dog d;
+    Cat c;
+    d = new Dog;
+    c = (Cat)d;
+}

@@ -1,0 +1,11 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 28
+
+class Worker : Object {
+    void run(void) {}
+}
+
+void main(void) {
+    Worker w;
+    w.run();
+}

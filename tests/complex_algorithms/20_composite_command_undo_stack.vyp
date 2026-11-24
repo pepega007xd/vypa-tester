@@ -1,0 +1,94 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class RegisterBox : Object {
+    int value;
+}
+
+class Command : Object {
+    void execute(RegisterBox target) {}
+    void undo(RegisterBox target) {}
+}
+
+class AddCmd : Command {
+    int delta;
+    AddCmd init(int d) { this.delta = d; return this; }
+    void execute(RegisterBox target) { target.value = target.value + this.delta; }
+    void undo(RegisterBox target) { target.value = target.value - this.delta; }
+}
+
+class SubCmd : Command {
+    int delta;
+    SubCmd init(int d) { this.delta = d; return this; }
+    void execute(RegisterBox target) { target.value = target.value - this.delta; }
+    void undo(RegisterBox target) { target.value = target.value + this.delta; }
+}
+
+class CmdNode : Object {
+    Command cmd;
+    CmdNode next;
+    CmdNode init(Command c, CmdNode n) { this.cmd = c; this.next = n; return this; }
+}
+
+class MacroCmd : Command {
+    CmdNode list;
+
+    void addStep(Command c) {
+        this.list = (new CmdNode).init(c, this.list);
+    }
+
+    void execReverse(CmdNode node, RegisterBox target) {
+        if (!node) { return; }
+        this.execReverse(node.next, target);
+        node.cmd.execute(target);
+    }
+
+    void execute(RegisterBox target) {
+        this.execReverse(this.list, target);
+    }
+
+    void undo(RegisterBox target) {
+        CmdNode curr;
+        curr = this.list;
+        while (curr) {
+            curr.cmd.undo(target);
+            curr = curr.next;
+        }
+    }
+}
+
+void main(void) {
+    RegisterBox box;
+    CmdNode history;
+    MacroCmd macro;
+    Command c1;
+    Command c2;
+
+    box = new RegisterBox;
+    box.value = 10;
+
+    c1 = (new AddCmd).init(15);
+    c2 = (new SubCmd).init(4);
+
+    macro = new MacroCmd;
+    macro.addStep((new AddCmd).init(100));
+    macro.addStep((new SubCmd).init(30));
+
+    c1.execute(box);
+    history = (new CmdNode).init(c1, history);
+
+    c2.execute(box);
+    history = (new CmdNode).init(c2, history);
+
+    macro.execute(box);
+    history = (new CmdNode).init(macro, history);
+
+    print("AFTER_EXEC:", (string)box.value, "\n");
+
+    while (history) {
+        history.cmd.undo(box);
+        history = history.next;
+    }
+
+    print("AFTER_UNDO:", (string)box.value, "\n");
+}

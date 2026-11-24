@@ -1,0 +1,30 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Account : Object {
+    int balance;
+
+    void init(int b) {
+        this.balance = b;
+    }
+
+    void transferTo(Account target, int amount) {
+        this.balance = this.balance - amount;
+        target.receiveFrom(this, amount);
+    }
+
+    void receiveFrom(Account sender, int amount) {
+        this.balance = this.balance + amount;
+    }
+}
+
+void main(void) {
+    Account a;
+    Account b;
+    a = new Account;
+    b = new Account;
+    a.init(100);
+    b.init(40);
+    a.transferTo(b, 35);
+    print((string)a.balance, "|", (string)b.balance, "\n");
+}

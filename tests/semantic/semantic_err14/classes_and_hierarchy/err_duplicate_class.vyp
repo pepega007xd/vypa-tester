@@ -1,0 +1,6 @@
+// TEST-INFO compiler-return-code 14
+
+class Node : Object {}
+class Node : Object {}
+
+void main(void) {}

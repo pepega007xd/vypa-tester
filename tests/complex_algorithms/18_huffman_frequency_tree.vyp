@@ -1,0 +1,92 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+// TEST-INFO required-extensions IFONLY,FOR
+
+class HuffNode : Object {
+    string symbol;
+    int freq;
+    HuffNode left;
+    HuffNode right;
+
+    HuffNode initLeaf(string s, int f) {
+        this.symbol = s;
+        this.freq = f;
+        return this;
+    }
+
+    HuffNode initInternal(HuffNode l, HuffNode r) {
+        this.symbol = "";
+        this.freq = l.freq + r.freq;
+        this.left = l;
+        this.right = r;
+        return this;
+    }
+}
+
+class PQNode : Object {
+    HuffNode tree;
+    PQNode next;
+    PQNode init(HuffNode t, PQNode n) { this.tree = t; this.next = n; return this; }
+}
+
+PQNode insertSorted(PQNode head, HuffNode t) {
+    if (!head) {
+        return (new PQNode).init(t, head);
+    }
+    if (t.freq <= head.tree.freq) {
+        return (new PQNode).init(t, head);
+    }
+    head.next = insertSorted(head.next, t);
+    return head;
+}
+
+string decodeBits(HuffNode root, string bits) {
+    HuffNode curr;
+    string out;
+    int i;
+    int len;
+    curr = root;
+    out = "";
+    len = length(bits);
+
+    for (i = 0; i < len; i = i + 1) {
+        if (subStr(bits, i, 1) == "0") {
+            curr = curr.left;
+        } else {
+            curr = curr.right;
+        }
+        if (!curr.left && !curr.right) {
+            out = out + curr.symbol;
+            curr = root;
+        }
+    }
+    return out;
+}
+
+void main(void) {
+    PQNode pq;
+    pq = insertSorted(pq, (new HuffNode).initLeaf("A", 5));
+    pq = insertSorted(pq, (new HuffNode).initLeaf("B", 2));
+    pq = insertSorted(pq, (new HuffNode).initLeaf("C", 1));
+    pq = insertSorted(pq, (new HuffNode).initLeaf("D", 1));
+
+    while (pq) {
+        if (!pq.next) {
+            break;
+        }
+        HuffNode n1;
+        HuffNode n2;
+        n1 = pq.tree;
+        n2 = pq.next.tree;
+        pq = pq.next.next;
+        pq = insertSorted(pq, (new HuffNode).initInternal(n1, n2));
+    }
+
+    HuffNode root;
+    root = pq.tree;
+    print(decodeBits(root, "1010000011"), "\n");
+}
+
+/*
+ 
+*/

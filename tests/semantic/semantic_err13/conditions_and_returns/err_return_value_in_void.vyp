@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 13
+
+void main(void) {
+    return 1;
+}

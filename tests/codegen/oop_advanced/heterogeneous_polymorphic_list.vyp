@@ -1,0 +1,47 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Expr : Object {
+    int eval(void) { return 0; }
+}
+
+class Const : Expr {
+    int v;
+    Const init(int val) {
+        this.v = val;
+        return this;
+    }
+    int eval(void) { return this.v; }
+}
+
+class Add : Expr {
+    Expr left;
+    Expr right;
+    Add init(Expr l, Expr r) {
+        this.left = l;
+        this.right = r;
+        return this;
+    }
+    int eval(void) { return this.left.eval() + this.right.eval(); }
+}
+
+class Mul : Expr {
+    Expr left;
+    Expr right;
+    Mul init(Expr l, Expr r) {
+        this.left = l;
+        this.right = r;
+        return this;
+    }
+    int eval(void) { return this.left.eval() * this.right.eval(); }
+}
+
+void main(void) {
+    // Represents (3 + 4) * (10 + 2) = 7 * 12 = 84
+    Expr tree;
+    tree = (new Mul).init(
+        (new Add).init((new Const).init(3), (new Const).init(4)),
+        (new Add).init((new Const).init(10), (new Const).init(2))
+    );
+    print((string)tree.eval(), "\n");
+}

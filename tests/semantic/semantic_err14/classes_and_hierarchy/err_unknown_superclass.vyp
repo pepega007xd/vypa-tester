@@ -1,0 +1,5 @@
+// TEST-INFO compiler-return-code 14
+
+class Child : NonExistentParent {}
+
+void main(void) {}

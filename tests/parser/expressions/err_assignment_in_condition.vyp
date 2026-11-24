@@ -1,0 +1,9 @@
+// TEST-INFO compiler-return-code 12
+// TEST-INFO required-extensions IFONLY
+
+void main(void) {
+    int a;
+    if (a = 5) {
+        print("Invalid\n");
+    }
+}

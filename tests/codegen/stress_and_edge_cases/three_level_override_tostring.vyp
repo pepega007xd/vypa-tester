@@ -1,0 +1,36 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class Item : Object {
+    string label;
+
+    void init(string l) {
+        this.label = l;
+    }
+
+    string dump(void) {
+        return "Item(" + this.label + ")";
+    }
+}
+
+class SpecialItem : Item {
+    int code;
+
+    void initSpecial(string l, int c) {
+        super.init(l);
+        this.code = c;
+    }
+
+    string dump(void) {
+        return super.getClass() + "%" + (string)this.code;
+    }
+}
+
+void main(void) {
+    Item i;
+    SpecialItem s;
+    s = new SpecialItem;
+    s.initSpecial("gear", 7);
+    i = s;
+    print(i.dump(), "\n");
+}

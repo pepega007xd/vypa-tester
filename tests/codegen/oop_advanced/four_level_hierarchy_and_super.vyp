@@ -1,0 +1,28 @@
+// TEST-INFO compiler-return-code 0
+// TEST-INFO interpreter-return-code 0
+
+class L1 : Object {
+    int tag(void) {
+        return 10;
+    }
+}
+
+class L2 : L1 {
+    // Intentionally does NOT override tag()
+    int mid(void) {
+        return 20;
+    }
+}
+
+class L3 : L2 {
+    int tag(void) {
+        // super.tag() must resolve up through L2 to L1.tag()
+        return super.tag() + this.mid() + 3;
+    }
+}
+
+void main(void) {
+    L1 poly;
+    poly = new L3;
+    print((string)poly.tag(), "\n");
+}
